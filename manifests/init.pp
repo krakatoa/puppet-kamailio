@@ -70,6 +70,12 @@ class kamailio(
   file { "/etc/default/kamailio":
     path => "/etc/default/kamailio",
     content => template("kamailio/default/kamailio"),
-    require => Package['kamailio']
+    require => Package['kamailio'],
+    notify => Service['kamailio']
+  }
+
+  service { 'kamailio':
+    name => 'kamailio',
+    ensure => running
   }
 }
