@@ -1,5 +1,5 @@
 name    'krakatoa-kamailio'
-version '0.0.4'
+version '0.0.5'
 source 'https://github.com/krakatoa/puppet-kamailio'
 author 'Fernando Dario Alonso'
 license 'Apache License, Version 2.0'
