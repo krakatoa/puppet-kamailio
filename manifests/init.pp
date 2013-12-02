@@ -35,7 +35,41 @@
 #
 # Copyright 2011 Your name here, unless otherwise noted.
 #
-class kamailio {
+class kamailio(
+  $kamailio_autostart = true,
+  $kamailio_version = "4.0"
+) {
 
+  case $kamailio_version {
+    '4.0': { $kamailio_pkg_version = "40" }
+    default: { notify "Version not found" }
+  }
 
+  include apt
+
+  apt::key { 'kamailio':
+    key   => '07D5C01D',
+    key_source => 'http://deb.kamailio.org/kamailiodebkey.gpg'
+  }
+
+  apt::source { 'kamailio':
+    location => "http://deb.kamailio.org/kamailio${kamailio_pkg_version}/",
+    release => "wheezy",
+    repos => "main",
+    include_src => true
+  }
+
+  $kamailio_packages = [ "kamailio" ]
+
+  package { "kamailio":
+    name => $kamailio_packages,
+    ensure => 'installed',
+    require => Apt::Source['kamailio'],
+  }
+
+  file { "/etc/default/kamailio":
+    path => "/etc/default/kamailio",
+    content => template("kamailio/default/kamailio"),
+    require => Package['kamailio']
+  }
 }
